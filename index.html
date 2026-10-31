@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI Calculator - เครื่องคำนวณดัชนีมวลกาย</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="background-decor">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <main class="container">
+    <header class="app-header">
+      <div class="header-icon">⚖️</div>
+      <h1>เครื่องคำนวณดัชนีมวลกาย</h1>
+      <p class="subtitle">Body Mass Index (BMI) Calculator</p>
+    </header>
+
+    <div class="main-card">
+      <!-- Unit Selector Tabs -->
+      <div class="unit-tabs">
+        <button type="button" class="tab-btn active" id="tabMetric" data-unit="metric">
+          📏 เมตริก (kg / cm)
+        </button>
+        <button type="button" class="tab-btn" id="tabImperial" data-unit="imperial">
+          📐 อิมพีเรียล (lbs / ft, in)
+        </button>
+      </div>
+
+      <form id="bmiForm" class="calculator-form">
+        <!-- Gender Selection -->
+        <div class="form-group">
+          <label class="group-label">เพศ (Gender)</label>
+          <div class="gender-selector">
+            <label class="gender-option">
+              <input type="radio" name="gender" value="male" checked>
+              <span class="gender-card">
+                <span class="icon">👨</span>
+                <span>ชาย</span>
+              </span>
+            </label>
+            <label class="gender-option">
+              <input type="radio" name="gender" value="female">
+              <span class="gender-card">
+                <span class="icon">👩</span>
+                <span>หญิง</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Age Input -->
+        <div class="form-group">
+          <label for="age" class="group-label">อายุ (ปี)</label>
+          <div class="input-wrapper">
+            <input type="number" id="age" min="2" max="120" placeholder="เช่น 25" required value="25">
+            <span class="input-suffix">ปี</span>
+          </div>
+        </div>
+
+        <!-- Metric Inputs -->
+        <div id="metricInputs" class="unit-section">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="heightCm" class="group-label">ส่วนสูง (เซนติเมตร)</label>
+              <div class="input-wrapper">
+                <input type="number" id="heightCm" min="50" max="260" step="0.5" placeholder="เช่น 170" required value="170">
+                <span class="input-suffix">cm</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="weightKg" class="group-label">น้ำหนัก (กิโลกรัม)</label>
+              <div class="input-wrapper">
+                <input type="number" id="weightKg" min="10" max="300" step="0.1" placeholder="เช่น 65" required value="65">
+                <span class="input-suffix">kg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Imperial Inputs -->
+        <div id="imperialInputs" class="unit-section hidden">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="group-label">ส่วนสูง (ฟุต & นิ้ว)</label>
+              <div class="form-row-compact">
+                <div class="input-wrapper">
+                  <input type="number" id="heightFt" min="1" max="8" placeholder="5" value="5">
+                  <span class="input-suffix">ft</span>
+                </div>
+                <div class="input-wrapper">
+                  <input type="number" id="heightIn" min="0" max="11.9" step="0.5" placeholder="7" value="7">
+                  <span class="input-suffix">in</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="weightLbs" class="group-label">น้ำหนัก (ปอนด์)</label>
+              <div class="input-wrapper">
+                <input type="number" id="weightLbs" min="20" max="660" step="0.5" placeholder="143" value="143">
+                <span class="input-suffix">lbs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="btnCalculate">
+            <span>⚡ คำนวณ BMI</span>
+          </button>
+          <button type="button" class="btn btn-secondary" id="btnReset">
+            <span>🔄 ล้างค่า</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Result Card -->
+      <section id="resultCard" class="result-section hidden">
+        <hr class="divider">
+        <h2 class="result-title">ผลการคำนวณของคุณ</h2>
+
+        <div class="result-display">
+          <div class="bmi-score-box">
+            <span class="bmi-caption">ค่า BMI ของคุณคือ</span>
+            <div class="bmi-number" id="bmiValue">--</div>
+            <div class="bmi-badge" id="bmiCategory">--</div>
+          </div>
+
+          <!-- Gauge Meter -->
+          <div class="gauge-container">
+            <div class="gauge-bar">
+              <div class="gauge-segment seg-underweight" title="ผอม / น้ำหนักน้อยกว่าเกณฑ์ (< 18.5)"></div>
+              <div class="gauge-segment seg-normal" title="สมส่วน / น้ำหนักปกติ (18.5 - 22.9)"></div>
+              <div class="gauge-segment seg-overweight" title="น้ำหนักเกิน (23.0 - 24.9)"></div>
+              <div class="gauge-segment seg-obese1" title="อ้วนระดับ 1 (25.0 - 29.9)"></div>
+              <div class="gauge-segment seg-obese2" title="อ้วนอันตราย (≥ 30.0)"></div>
+            </div>
+            <div class="gauge-indicator" id="gaugeIndicator"></div>
+            <div class="gauge-labels">
+              <span>ผอม</span>
+              <span>ปกติ</span>
+              <span>ท้วม</span>
+              <span>อ้วน</span>
+              <span>อันตราย</span>
+            </div>
+          </div>
+
+          <!-- Details & Recommendations -->
+          <div class="result-details">
+            <div class="detail-card">
+              <div class="detail-icon">🎯</div>
+              <div>
+                <div class="detail-title">น้ำหนักมาตรฐานที่เหมาะสม</div>
+                <div class="detail-value" id="idealWeight">--</div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-icon">💡</div>
+              <div>
+                <div class="detail-title">คำแนะนำเพื่อสุขภาพ</div>
+                <div class="detail-desc" id="healthAdvice">--</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Section -->
+      <section class="history-section">
+        <hr class="divider">
+        <div class="history-header">
+          <h3>ประวัติการคำนวณล่าสุด</h3>
+          <button type="button" id="btnClearHistory" class="btn-text">ล้างประวัติ</button>
+        </div>
+        <div id="historyList" class="history-list">
+          <p class="empty-history">ยังไม่มีบันทึกประวัติการคำนวณ</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- BMI Reference Table -->
+    <section class="reference-section">
+      <h3>เกณฑ์มาตรฐานดัชนีมวลกาย (สำหรับคนเอเชีย / WHO Asia-Pacific)</h3>
+      <div class="table-responsive">
+        <table class="bmi-table">
+          <thead>
+            <tr>
+              <th>ระดับ BMI (kg/m²)</th>
+              <th>เกณฑ์ความหมาย</th>
+              <th>ความเสี่ยงต่อโรค</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-underweight">
+              <td><strong>น้อยกว่า 18.5</strong></td>
+              <td>ผอมเกินไป (Underweight)</td>
+              <td>เสี่ยงต่อการขาดสารอาหาร ภูมิคุ้มกันต่ำ</td>
+            </tr>
+            <tr class="row-normal">
+              <td><strong>18.5 - 22.9</strong></td>
+              <td>สมส่วน / สุขภาพดี (Normal)</td>
+              <td>ความเสี่ยงระดับปกติ สุขภาพดีที่สุด</td>
+            </tr>
+            <tr class="row-overweight">
+              <td><strong>23.0 - 24.9</strong></td>
+              <td>น้ำหนักเกิน / ท้วม (Overweight)</td>
+              <td>เริ่มมีความเสี่ยงต่อโรคหัวใจและเบาหวาน</td>
+            </tr>
+            <tr class="row-obese1">
+              <td><strong>25.0 - 29.9</strong></td>
+              <td>โรคอ้วนระดับ 1 (Obesity Grade 1)</td>
+              <td>มีความเสี่ยงระดับปานกลาง ควรควบคุมอาหาร</td>
+            </tr>
+            <tr class="row-obese2">
+              <td><strong>30.0 ขึ้นไป</strong></td>
+              <td>โรคอ้วนระดับ 2 (Obesity Grade 2)</td>
+              <td>เสี่ยงสูงมากต่อภาวะแทรกซ้อน ควรพบแพทย์</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      <p>© 2026 BMI Calculator. พัฒนาขึ้นด้วย HTML, CSS & JavaScript</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

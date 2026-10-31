@@ -1,0 +1,18 @@
+{
+  "name": "bmi-calculator-app",
+  "version": "1.0.0",
+  "description": "Modern BMI Calculator Web App with Thai / Asia-Pacific standards, dual units, gauge meter and history",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "bmi",
+    "bmi-calculator",
+    "health",
+    "thai",
+    "javascript"
+  ],
+  "author": "prasanmars-blip",
+  "license": "MIT"
+}
